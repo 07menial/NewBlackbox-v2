@@ -17,11 +17,17 @@ jobs:
           cache: gradle
 
       - uses: android-actions/setup-android@v3
+        with:
+          components: |
+            platform-tools
+            cmdline-tools;latest
+            build-tools;35.0.0
+            platforms;android-35
+            ndk;29.0.13846066
 
-      - name: Accept SDK licenses and install NDK
+      - name: Accept SDK licenses
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;29.0.13846066" "platforms;android-35" "build-tools;35.0.0"
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
 
       - name: Build debug APK
         run: |
