@@ -133,7 +133,20 @@ public class IOCore {
 
             if (BlackBoxCore.getContext().getExternalCacheDir() != null && context.getExternalCacheDir() != null) {
                 int storageMode = BlackBoxCore.get().getExternalStorageMode();
-                if (storageMode != 2) {
+                if (storageMode == 3) {
+                    // 3 = stocarea REALA a telefonului (poze, fisiere, descarcari) comuna pentru toate clonele;
+                    // doar folderele private ale aplicatiei (Android/data, Android/obb) raman separate per clona.
+                    int cloneUser = BlackBoxCore.getUserId();
+                    File extData = BEnvironment.getExternalDataDir(packageName, cloneUser);
+                    File extObb = BEnvironment.getExternalObbDir(packageName, cloneUser);
+                    FileUtils.mkdirs(extData.getAbsolutePath());
+                    FileUtils.mkdirs(extObb.getAbsolutePath());
+                    String[] roots = {"/sdcard", String.format("/storage/emulated/%d", systemUserId)};
+                    for (String root : roots) {
+                        rule.put(root + "/Android/data/" + packageName, extData.getAbsolutePath());
+                        rule.put(root + "/Android/obb/" + packageName, extObb.getAbsolutePath());
+                    }
+                } else if (storageMode != 2) {
                     // 0 = per clona, 1 = comun (folosim spatiul utilizatorului 0 pentru toate clonele)
                     int storageUser = storageMode == 1 ? 0 : BlackBoxCore.getUserId();
                     File external = BEnvironment.getExternalUserDir(storageUser);
