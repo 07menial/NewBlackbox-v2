@@ -1256,6 +1256,10 @@ public class BlackBoxCore extends ClientConfiguration {
     }
 
     @Override
+    public int getExternalStorageMode() {
+        return mClientConfiguration != null ? mClientConfiguration.getExternalStorageMode() : 0;
+    }
+
     public boolean isHideRoot() {
         return mClientConfiguration.isHideRoot();
     }
