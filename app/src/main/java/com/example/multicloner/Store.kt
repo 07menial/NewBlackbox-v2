@@ -32,7 +32,7 @@ class Store(context: Context) {
     var storageMode by mutableIntStateOf(prefs.getInt(KEY_STORAGE_MODE, 1))
         private set
 
-    fun setStorageMode(mode: Int) {
+    fun updateStorageMode(mode: Int) {
         storageMode = mode
         prefs.edit().putInt(KEY_STORAGE_MODE, mode).commit()
     }
