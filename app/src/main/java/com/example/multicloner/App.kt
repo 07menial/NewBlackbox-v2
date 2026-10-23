@@ -2,6 +2,10 @@ package com.example.multicloner
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import top.niunaijun.blackbox.BlackBoxCore
 import top.niunaijun.blackbox.app.configuration.ClientConfiguration
@@ -45,6 +49,45 @@ class App : Application() {
             BlackBoxCore.get().doCreate()
         } catch (e: Throwable) {
             Log.e("MultiCloner", "BlackBox create failed", e)
+        }
+        startMainThreadWatchdog()
+    }
+
+    @Volatile
+    private var lastPong = SystemClock.uptimeMillis()
+
+    /**
+     * Diagnostic pentru "Multi Cloner isn't responding": daca firul principal al oricarui proces
+     * (UI sau clona) sta blocat peste 4 secunde, scrie in jurnal stiva lui (eticheta ANRWatch).
+     */
+    private fun startMainThreadWatchdog() {
+        try {
+            val main = Handler(Looper.getMainLooper())
+            val process = if (Build.VERSION.SDK_INT >= 28) getProcessName() else packageName
+            lastPong = SystemClock.uptimeMillis()
+            Thread({
+                var reported = false
+                while (true) {
+                    try {
+                        Thread.sleep(1000)
+                    } catch (e: InterruptedException) {
+                        return@Thread
+                    }
+                    main.post { lastPong = SystemClock.uptimeMillis() }
+                    val stalled = SystemClock.uptimeMillis() - lastPong
+                    if (stalled > 4000) {
+                        if (!reported) {
+                            reported = true
+                            val stack = Looper.getMainLooper().thread.stackTrace.joinToString("\n    at ")
+                            Log.e("ANRWatch", "[$process] firul principal blocat de ${stalled}ms:\n    at $stack")
+                        }
+                    } else {
+                        reported = false
+                    }
+                }
+            }, "anr-watchdog").apply { isDaemon = true }.start()
+        } catch (e: Throwable) {
+            Log.w("MultiCloner", "watchdog failed", e)
         }
     }
 }
