@@ -7,7 +7,7 @@ public abstract class ClientConfiguration {
 
     /**
      * Stocarea externa (/sdcard) vazuta de aplicatiile clonate:
-     * 0 = separata pentru fiecare clona, 1 = comuna pentru toate clonele, 2 = stocarea reala a telefonului.
+     * 0 = virtuala separata, 1 = virtuala comuna, 2 = stocarea reala, 3 = stocarea reala + Android/data separat per clona (implicit).
      */
     public int getExternalStorageMode() {
         return 0;
