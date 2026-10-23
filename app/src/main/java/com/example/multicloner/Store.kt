@@ -27,9 +27,9 @@ class Store(context: Context) {
 
     /**
      * Stocarea vazuta de clone (citita si de App.kt in procesele clonelor):
-     * 0 = separata pentru fiecare clona, 1 = comuna pentru toate clonele, 2 = stocarea reala a telefonului.
+     * 0 = virtuala separata, 1 = virtuala comuna, 2 = stocarea reala, 3 = stocarea reala + Android/data separat per clona.
      */
-    var storageMode by mutableIntStateOf(prefs.getInt(KEY_STORAGE_MODE, 1))
+    var storageMode by mutableIntStateOf(prefs.getInt(KEY_STORAGE_MODE, DEFAULT_STORAGE_MODE))
         private set
 
     fun updateStorageMode(mode: Int) {
@@ -39,8 +39,8 @@ class Store(context: Context) {
 
     companion object {
         const val PREFS = "multicloner"
-        const val KEY_STORAGE_MODE = "storage_mode"
-        const val DEFAULT_STORAGE_MODE = 1
+        const val KEY_STORAGE_MODE = "storage_mode_v2"
+        const val DEFAULT_STORAGE_MODE = 3
     }
 
     init {
