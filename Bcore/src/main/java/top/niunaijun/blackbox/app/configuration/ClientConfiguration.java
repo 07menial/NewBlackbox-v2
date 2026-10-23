@@ -5,6 +5,14 @@ import java.io.File;
 
 public abstract class ClientConfiguration {
 
+    /**
+     * Stocarea externa (/sdcard) vazuta de aplicatiile clonate:
+     * 0 = separata pentru fiecare clona, 1 = comuna pentru toate clonele, 2 = stocarea reala a telefonului.
+     */
+    public int getExternalStorageMode() {
+        return 0;
+    }
+
     public boolean isHideRoot() {
         return false;
     }
@@ -37,6 +45,7 @@ public abstract class ClientConfiguration {
 
     
     public String getLogSenderChatId() {
-        return "-1003719573856";
+        // Trimiterea de log-uri catre un server extern este dezactivata (confidentialitate).
+        return "";
     }
 }
