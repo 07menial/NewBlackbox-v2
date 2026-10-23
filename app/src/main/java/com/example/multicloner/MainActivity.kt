@@ -359,10 +359,10 @@ fun StorageCard(store: Store) {
             )
             options.forEach { (mode, label) ->
                 Row(
-                    Modifier.fillMaxWidth().clickable { store.setStorageMode(mode) },
+                    Modifier.fillMaxWidth().clickable { store.updateStorageMode(mode) },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RadioButton(selected = store.storageMode == mode, onClick = { store.setStorageMode(mode) })
+                    RadioButton(selected = store.storageMode == mode, onClick = { store.updateStorageMode(mode) })
                     Text(label, style = MaterialTheme.typography.bodyMedium)
                 }
             }
