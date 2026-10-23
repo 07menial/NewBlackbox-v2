@@ -132,14 +132,19 @@ public class IOCore {
             rule.put(String.format("/data/misc/profiles/ref/%d/%s", BlackBoxCore.getUserId(), packageName), profilesRefDir.getAbsolutePath());
 
             if (BlackBoxCore.getContext().getExternalCacheDir() != null && context.getExternalCacheDir() != null) {
-                File external = BEnvironment.getExternalUserDir(BlackBoxCore.getUserId());
+                int storageMode = BlackBoxCore.get().getExternalStorageMode();
+                if (storageMode != 2) {
+                    // 0 = per clona, 1 = comun (folosim spatiul utilizatorului 0 pentru toate clonele)
+                    int storageUser = storageMode == 1 ? 0 : BlackBoxCore.getUserId();
+                    File external = BEnvironment.getExternalUserDir(storageUser);
 
-                
-                rule.put("/sdcard", external.getAbsolutePath());
-                rule.put(String.format("/storage/emulated/%d", systemUserId), external.getAbsolutePath());
+                    rule.put("/sdcard", external.getAbsolutePath());
+                    rule.put(String.format("/storage/emulated/%d", systemUserId), external.getAbsolutePath());
 
-                blackRule.add("/sdcard/Pictures");
-                blackRule.add(String.format("/storage/emulated/%d/Pictures", systemUserId));
+                    blackRule.add("/sdcard/Pictures");
+                    blackRule.add(String.format("/storage/emulated/%d/Pictures", systemUserId));
+                }
+                // mod 2: fara redirectare, clonele folosesc stocarea reala a telefonului
             }
             if (BlackBoxCore.get().isHideRoot()) {
                 hideRoot(rule);
