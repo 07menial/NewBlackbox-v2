@@ -345,16 +345,18 @@ fun MoveDialog(c: Clone, folders: List<Folder>, onDismiss: () -> Unit, onPick: (
 @Composable
 fun StorageCard(store: Store) {
     val options = listOf(
-        1 to "Comuna pentru toate clonele (recomandat)",
-        0 to "Separata pentru fiecare clona",
-        2 to "Stocarea reala a telefonului"
+        3 to "Stocarea telefonului, comuna (recomandat)",
+        2 to "Stocarea telefonului, fara separare deloc",
+        1 to "Virtuala, comuna pentru toate clonele",
+        0 to "Virtuala, separata pentru fiecare clona"
     )
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(Modifier.padding(12.dp)) {
             Text("Stocarea clonelor", style = MaterialTheme.typography.titleSmall)
             Text(
-                "Fiecare clona are propriul utilizator (cont si date separate), dar poate folosi acelasi " +
-                    "spatiu de stocare (poze, descarcari, fisiere). Schimbarea se aplica la urmatoarea pornire a clonelor.",
+                "Fiecare clona are propriul utilizator (cont si date separate). Modul recomandat foloseste stocarea " +
+                    "reala a telefonului (poze, descarcari, fisiere) comuna pentru toate clonele. Modurile virtuale " +
+                    "nu vad pozele tale. Schimbarea se aplica dupa ce inchizi si redeschizi clonele.",
                 style = MaterialTheme.typography.bodySmall
             )
             options.forEach { (mode, label) ->
